@@ -1,65 +1,77 @@
 /* ============================================================
    Documento imprimível A4 — espelha o layout do PWA
-   (cabeçalho, seções em cards e campos rotulados).
+   Distribuído de forma equilibrada em uma única folha A4.
    ============================================================ */
 
-/* Alterna visibilidade entre a interface (tela) e o documento (impressão) */
 .print-only {
   display: none;
 }
 
-/* ---- Documento A4 ---- */
+/* Folha A4: conteúdo distribuído verticalmente, assinatura no rodapé */
 .sheet {
   box-sizing: border-box;
   width: 210mm;
-  min-height: 297mm;
-  padding: 12mm;
+  height: 297mm;
+  padding: 14mm 15mm 12mm;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
   background: #ffffff;
   color: #18181b;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  font-size: 10pt;
-  line-height: 1.35;
+  font-size: 10.5pt;
+  line-height: 1.4;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
+  overflow: hidden;
 }
 
-/* Cabeçalho preto (igual ao AppHeader do PWA) */
+/* Cabeçalho: logo + contato */
 .p-header {
+  flex-shrink: 0;
   background: #0d0d0d;
-  border-radius: 4mm;
-  padding: 6mm 8mm;
+  border-radius: 3mm;
+  padding: 5mm 8mm;
   text-align: center;
   color: #ffffff;
 }
 
 .p-header .p-logo {
-  height: 16mm;
+  height: 15mm;
   width: auto;
   display: inline-block;
 }
 
-.p-header .p-header-title {
-  color: #cf9179;
-  font-size: 16pt;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  margin-top: 2mm;
-}
-
 .p-header .p-header-contact {
-  color: #a3a3a3;
+  color: #b8b8b8;
   font-size: 8pt;
-  margin-top: 1.5mm;
+  margin-top: 2mm;
+  letter-spacing: 0.2px;
 }
 
-/* Seções em cards */
+/* Área central preenche o espaço disponível */
+.p-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6mm;
+  margin-top: 7mm;
+}
+
+/* Seções */
 .p-section {
   border: 0.3mm solid #e5e5e5;
   border-radius: 3mm;
-  padding: 5mm;
-  margin-top: 5mm;
-  break-inside: avoid;
+  padding: 4.5mm 5mm;
+}
+
+/* Seção de textos cresce para ocupar o espaço restante */
+.p-section-grow {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .p-section .p-section-title {
@@ -68,22 +80,34 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.6px;
-  margin-bottom: 4mm;
+  margin-bottom: 3.5mm;
 }
 
-/* Grade de campos (2 colunas; 4 nos horários) */
+/* Grade de campos curtos */
 .p-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4mm;
+  gap: 4mm 6mm;
 }
 
 .p-grid.p-grid-4 {
   grid-template-columns: repeat(4, 1fr);
 }
 
-.p-field-full {
-  grid-column: 1 / -1;
+/* Pilha vertical dos campos de texto */
+.p-textstack {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4mm;
+}
+
+.p-field-grow-wrap {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Campo: rótulo + caixa de valor */
@@ -92,16 +116,16 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  color: #525252;
-  margin-bottom: 1.2mm;
+  color: #6b6b6b;
+  margin-bottom: 1.5mm;
 }
 
 .p-field .p-field-value {
   border: 0.3mm solid #d4d4d4;
   border-radius: 2mm;
   background: #fafafa;
-  padding: 2.2mm 3mm;
-  min-height: 7mm;
+  padding: 2.5mm 3mm;
+  min-height: 8mm;
   font-size: 10.5pt;
   color: #18181b;
   white-space: pre-wrap;
@@ -109,16 +133,22 @@
 }
 
 .p-field .p-field-value.p-field-tall {
-  min-height: 20mm;
+  min-height: 16mm;
 }
 
-/* Assinatura */
+/* Caixa que cresce (Informationen) */
+.p-field .p-field-value.p-field-grow {
+  flex: 1;
+  min-height: 22mm;
+}
+
+/* Assinatura no rodapé da mesma folha */
 .p-signatures {
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
-  gap: 14mm;
-  margin-top: 12mm;
-  break-inside: avoid;
+  gap: 16mm;
+  margin-top: 8mm;
 }
 
 .p-signatures .p-sign-block {
@@ -127,7 +157,7 @@
 }
 
 .p-signatures .p-sign-space {
-  min-height: 16mm;
+  min-height: 14mm;
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -136,18 +166,18 @@
 }
 
 .p-signatures .p-sign-line {
-  border-top: 0.3mm solid #0d0d0d;
+  border-top: 0.4mm solid #0d0d0d;
 }
 
 .p-signatures .p-sign-label {
   font-size: 8pt;
-  color: #525252;
+  color: #6b6b6b;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   margin-top: 1.5mm;
 }
 
-/* ---- Regras de impressão ---- */
+/* ---- Impressão ---- */
 @media print {
   @page {
     size: A4;
@@ -173,7 +203,8 @@
 
   .sheet {
     width: 210mm;
-    min-height: 297mm;
+    height: 297mm;
     margin: 0;
+    overflow: hidden;
   }
 }

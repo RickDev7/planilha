@@ -9,8 +9,6 @@ interface PrintDocumentProps {
 interface Field {
   label: string;
   value: string;
-  /** Ocupa a largura inteira (campos de texto longos). */
-  full?: boolean;
 }
 
 /**
@@ -38,47 +36,44 @@ export function PrintDocument({ sheet }: PrintDocumentProps) {
   return (
     <div className="print-only" aria-hidden="true">
       <div className="sheet">
-        {/* Cabeçalho (igual ao PWA) */}
+        {/* Cabeçalho (logo + contato, sem título textual) */}
         <div className="p-header">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className="p-logo" src="/logo.png" alt="KILE Gebäudereinigung" />
-          <div className="p-header-title">{COMPANY.title}</div>
           <div className="p-header-contact">
             {COMPANY.address} · {COMPANY.city} · {COMPANY.phone} · {COMPANY.email}
           </div>
         </div>
 
-        {/* Seção: Dados do serviço */}
-        <div className="p-section">
-          <div className="p-section-title">Servicedaten</div>
-          <div className="p-grid">
-            {serviceFields.map((f) => (
-              <Field key={f.label} field={f} />
-            ))}
+        <div className="p-content">
+          <div className="p-section">
+            <div className="p-section-title">Servicedaten</div>
+            <div className="p-grid">
+              {serviceFields.map((f) => (
+                <Field key={f.label} field={f} />
+              ))}
+            </div>
+          </div>
+
+          <div className="p-section p-section-grow">
+            <div className="p-section-title">Aufgabe und Bemerkungen</div>
+            <div className="p-textstack">
+              <Field field={{ label: "Aufgabe", value: sheet.tarefa }} tall />
+              <Field field={{ label: "Bemerkung", value: sheet.observacao }} tall />
+              <Field field={{ label: "Informationen", value: sheet.informacoes }} grow />
+            </div>
+          </div>
+
+          <div className="p-section">
+            <div className="p-section-title">Uhrzeiten</div>
+            <div className="p-grid p-grid-4">
+              {timeFields.map((f) => (
+                <Field key={f.label} field={f} />
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Seção: Tarefa e observações */}
-        <div className="p-section">
-          <div className="p-section-title">Aufgabe und Bemerkungen</div>
-          <div className="p-grid">
-            <Field field={{ label: "Aufgabe", value: sheet.tarefa, full: true }} tall />
-            <Field field={{ label: "Bemerkung", value: sheet.observacao, full: true }} tall />
-            <Field field={{ label: "Informationen", value: sheet.informacoes, full: true }} tall />
-          </div>
-        </div>
-
-        {/* Seção: Horários */}
-        <div className="p-section">
-          <div className="p-section-title">Uhrzeiten</div>
-          <div className="p-grid p-grid-4">
-            {timeFields.map((f) => (
-              <Field key={f.label} field={f} />
-            ))}
-          </div>
-        </div>
-
-        {/* Assinatura (para assinar após imprimir) */}
         <div className="p-signatures">
           <div className="p-sign-block">
             <div className="p-sign-space">{formatDate(sheet.data)}</div>
@@ -96,13 +91,20 @@ export function PrintDocument({ sheet }: PrintDocumentProps) {
   );
 }
 
-function Field({ field, tall }: { field: Field; tall?: boolean }) {
+function Field({
+  field,
+  tall,
+  grow,
+}: {
+  field: Field;
+  tall?: boolean;
+  grow?: boolean;
+}) {
+  const cls = grow ? " p-field-grow" : tall ? " p-field-tall" : "";
   return (
-    <div className={`p-field${field.full ? " p-field-full" : ""}`}>
+    <div className={`p-field${grow ? " p-field-grow-wrap" : ""}`}>
       <div className="p-field-label">{field.label}</div>
-      <div className={`p-field-value${tall ? " p-field-tall" : ""}`}>
-        {field.value}
-      </div>
+      <div className={`p-field-value${cls}`}>{field.value}</div>
     </div>
   );
 }
