@@ -1,6 +1,6 @@
 /* ============================================================
-   Documento imprimível A4 — Folha de Serviço KILE
-   Reproduz o layout da folha original em HTML/CSS puro.
+   Documento imprimível A4 — espelha o layout do PWA
+   (cabeçalho, seções em cards e campos rotulados).
    ============================================================ */
 
 /* Alterna visibilidade entre a interface (tela) e o documento (impressão) */
@@ -13,223 +13,120 @@
   box-sizing: border-box;
   width: 210mm;
   min-height: 297mm;
-  padding: 12mm 12mm 10mm;
+  padding: 12mm;
   margin: 0 auto;
   background: #ffffff;
-  color: #111111;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 10.5pt;
+  color: #18181b;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 10pt;
   line-height: 1.35;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
 
-/* Cabeçalho: logo + dados da empresa */
-.sheet-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8mm;
-  border-bottom: 2px solid #0d0d0d;
-  padding-bottom: 4mm;
-}
-
-.sheet-logo {
-  height: 22mm;
-  width: auto;
-  display: block;
-}
-
-.sheet-company {
-  text-align: right;
-  font-size: 9.5pt;
-  line-height: 1.4;
-}
-
-.sheet-company .company-name {
-  color: #b06a4f;
-  font-weight: 700;
-  font-size: 11pt;
-  margin-bottom: 1mm;
-}
-
-/* Barra de seções (verde / vermelho) como na folha original */
-.sheet-band {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1.4fr;
-  margin-top: 5mm;
-  border: 1px solid #0d0d0d;
-}
-
-.sheet-band > div {
-  padding: 1.6mm 3mm;
-  font-weight: 700;
-  font-size: 10pt;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-
-.sheet-band .band-green {
-  background: #8cc63f;
-  color: #0d0d0d;
-  border-right: 1px solid #0d0d0d;
-}
-
-.sheet-band .band-red {
-  background: #e0362f;
-  color: #ffffff;
-}
-
-/* Corpo em duas colunas: lista de serviços + área direita */
-.sheet-body {
-  display: grid;
-  grid-template-columns: 38% 1fr;
-  gap: 4mm;
-  margin-top: 4mm;
-}
-
-/* Painel laranja "Lista de Serviços" */
-.service-list {
-  border: 1px solid #0d0d0d;
-  border-radius: 1mm;
-  overflow: hidden;
-}
-
-.service-list .list-title {
-  background: #f4a72c;
-  color: #0d0d0d;
-  font-weight: 800;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 2mm;
-  font-size: 10.5pt;
-}
-
-.service-list .list-row {
-  border-top: 1px solid #e2c185;
-  padding: 2mm 3mm;
-  background: #fdefd6;
-}
-
-.service-list .list-label {
-  color: #a35b13;
-  font-weight: 700;
-  font-size: 8.5pt;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-}
-
-.service-list .list-value {
-  min-height: 5mm;
-  font-size: 10.5pt;
-  color: #111111;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-/* Área direita */
-.sheet-right {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Tabela Von / Bis / Gesamt */
-.time-table {
-  border: 1px solid #0d0d0d;
-  border-radius: 1mm;
-  overflow: hidden;
-}
-
-.time-table .time-head {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+/* Cabeçalho preto (igual ao AppHeader do PWA) */
+.p-header {
   background: #0d0d0d;
+  border-radius: 4mm;
+  padding: 6mm 8mm;
+  text-align: center;
   color: #ffffff;
 }
 
-.time-table .time-head > div {
-  padding: 1.6mm 3mm;
+.p-header .p-logo {
+  height: 16mm;
+  width: auto;
+  display: inline-block;
+}
+
+.p-header .p-header-title {
+  color: #cf9179;
+  font-size: 16pt;
   font-weight: 700;
-  font-size: 9.5pt;
+  letter-spacing: 0.5px;
+  margin-top: 2mm;
+}
+
+.p-header .p-header-contact {
+  color: #a3a3a3;
+  font-size: 8pt;
+  margin-top: 1.5mm;
+}
+
+/* Seções em cards */
+.p-section {
+  border: 0.3mm solid #e5e5e5;
+  border-radius: 3mm;
+  padding: 5mm;
+  margin-top: 5mm;
+  break-inside: avoid;
+}
+
+.p-section .p-section-title {
+  color: #b06a4f;
+  font-size: 9pt;
+  font-weight: 700;
   text-transform: uppercase;
-  border-right: 1px solid #333;
+  letter-spacing: 0.6px;
+  margin-bottom: 4mm;
 }
 
-.time-table .time-head > div:last-child {
-  border-right: none;
-}
-
-.time-table .time-values {
+/* Grade de campos (2 colunas; 4 nos horários) */
+.p-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  gap: 4mm;
 }
 
-.time-table .time-values > div {
-  padding: 2.5mm 3mm;
-  font-size: 11pt;
-  border-right: 1px solid #d4d4d4;
-  min-height: 6mm;
+.p-grid.p-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
 }
 
-.time-table .time-values > div:last-child {
-  border-right: none;
+.p-field-full {
+  grid-column: 1 / -1;
 }
 
-/* Área de Informações com pauta */
-.notes {
-  margin-top: 4mm;
-  border: 1px solid #0d0d0d;
-  border-radius: 1mm;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.notes .notes-title {
-  background: #e0362f;
-  color: #ffffff;
-  font-weight: 700;
+/* Campo: rótulo + caixa de valor */
+.p-field .p-field-label {
+  font-size: 7.5pt;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  padding: 1.6mm 3mm;
-  font-size: 9.5pt;
+  color: #525252;
+  margin-bottom: 1.2mm;
 }
 
-.notes .notes-body {
-  flex: 1;
-  min-height: 70mm;
-  padding: 3mm;
+.p-field .p-field-value {
+  border: 0.3mm solid #d4d4d4;
+  border-radius: 2mm;
+  background: #fafafa;
+  padding: 2.2mm 3mm;
+  min-height: 7mm;
   font-size: 10.5pt;
+  color: #18181b;
   white-space: pre-wrap;
   word-break: break-word;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 7.4mm,
-    #d9d9d9 7.4mm,
-    #d9d9d9 7.5mm
-  );
-  background-position: 0 4mm;
 }
 
-/* Rodapé: data + assinatura (espaço para assinar após imprimir) */
-.sheet-footer {
+.p-field .p-field-value.p-field-tall {
+  min-height: 20mm;
+}
+
+/* Assinatura */
+.p-signatures {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
   gap: 14mm;
-  margin-top: 10mm;
+  margin-top: 12mm;
+  break-inside: avoid;
 }
 
-.sheet-footer .foot-block {
+.p-signatures .p-sign-block {
   flex: 1;
   text-align: center;
 }
 
-/* Área livre acima da linha, onde se escreve/assinacom a caneta */
-.sheet-footer .sign-space {
+.p-signatures .p-sign-space {
   min-height: 16mm;
   display: flex;
   align-items: flex-end;
@@ -238,13 +135,13 @@
   font-size: 11pt;
 }
 
-.sheet-footer .foot-line {
-  border-top: 1px solid #0d0d0d;
+.p-signatures .p-sign-line {
+  border-top: 0.3mm solid #0d0d0d;
 }
 
-.sheet-footer .foot-label {
-  font-size: 8.5pt;
-  color: #555;
+.p-signatures .p-sign-label {
+  font-size: 8pt;
+  color: #525252;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   margin-top: 1.5mm;
@@ -278,6 +175,5 @@
     width: 210mm;
     min-height: 297mm;
     margin: 0;
-    page-break-after: avoid;
   }
 }
