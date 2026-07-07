@@ -7,6 +7,7 @@ import { clearSheet, loadSheet, saveSheet } from "@/utils/storage";
 import { buildPdfName, generatePdf } from "@/utils/print";
 import { computeDuration } from "@/utils/format";
 import { FormField } from "./FormField";
+import { SignaturePad } from "./SignaturePad";
 import { PrintDocument } from "./PrintDocument";
 
 export function ServiceForm() {
@@ -159,6 +160,15 @@ export function ServiceForm() {
             value={sheet.data}
             onChange={update("data")}
           />
+        </Section>
+
+        <Section title="Unterschrift">
+          <div className="sm:col-span-2">
+            <SignaturePad
+              value={sheet.assinatura}
+              onChange={update("assinatura")}
+            />
+          </div>
         </Section>
 
         {/* Botões de ação */}

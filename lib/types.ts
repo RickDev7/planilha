@@ -16,6 +16,8 @@ export interface ServiceSheet {
   bis: string;
   gesamt: string;
   data: string;
+  /** Assinatura do cliente como imagem PNG (data URL). Vazio se não assinada. */
+  assinatura: string;
 }
 
 export type ServiceSheetField = keyof ServiceSheet;

@@ -25,6 +25,7 @@ export const EMPTY_SHEET: ServiceSheet = {
   bis: "",
   gesamt: "",
   data: "",
+  assinatura: "",
 };
 
 /** Chave usada para persistir o rascunho no navegador (offline). */

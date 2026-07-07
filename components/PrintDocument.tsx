@@ -81,9 +81,18 @@ export function PrintDocument({ sheet }: PrintDocumentProps) {
             <div className="p-sign-label">Datum</div>
           </div>
           <div className="p-sign-block">
-            <div className="p-sign-space" />
+            <div className="p-sign-space">
+              {sheet.assinatura ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  className="p-sign-img"
+                  src={sheet.assinatura}
+                  alt="Unterschrift"
+                />
+              ) : null}
+            </div>
             <div className="p-sign-line" />
-            <div className="p-sign-label">Unterschrift Kunde</div>
+            <div className="p-sign-label">Unterschrift Mitarbeiter</div>
           </div>
         </div>
       </div>
