@@ -1,0 +1,43 @@
+@import "tailwindcss";
+@import "./print.css";
+
+/* Paleta da marca KILE */
+:root {
+  --kile-black: #0d0d0d;
+  --kile-copper: #b06a4f;
+  --kile-copper-light: #cf9179;
+  --kile-green: #8cc63f;
+  --kile-orange: #f4a72c;
+  --kile-orange-soft: #fdefd6;
+  --kile-red: #e0362f;
+  --background: #f4f4f5;
+  --foreground: #18181b;
+}
+
+@theme inline {
+  --color-kile-black: var(--kile-black);
+  --color-kile-copper: var(--kile-copper);
+  --color-kile-copper-light: var(--kile-copper-light);
+  --color-kile-green: var(--kile-green);
+  --color-kile-orange: var(--kile-orange);
+  --color-kile-orange-soft: var(--kile-orange-soft);
+  --color-kile-red: var(--kile-red);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* Evita zoom automático em inputs no iOS/Android mantendo fonte >= 16px */
+input,
+textarea,
+select,
+button {
+  font-size: 16px;
+}
