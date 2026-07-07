@@ -11,6 +11,8 @@ type BaseProps = {
 type InputProps = BaseProps & {
   as?: "input";
   type?: "text" | "date" | "time";
+  /** Campo calculado/somente leitura (ex: total de horas). */
+  readOnly?: boolean;
 };
 
 type TextareaProps = BaseProps & {
@@ -57,7 +59,10 @@ export function FormField(props: FormFieldProps) {
           value={value}
           onChange={handleChange}
           placeholder={placeholder}
-          className={fieldClass}
+          readOnly={props.readOnly}
+          className={`${fieldClass} ${
+            props.readOnly ? "cursor-default bg-neutral-100 text-neutral-700" : ""
+          }`}
         />
       )}
     </div>

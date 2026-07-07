@@ -5,6 +5,7 @@ import { EMPTY_SHEET } from "@/lib/constants";
 import type { ServiceSheet, ServiceSheetField } from "@/lib/types";
 import { clearSheet, loadSheet, saveSheet } from "@/utils/storage";
 import { buildPdfName, generatePdf } from "@/utils/print";
+import { computeDuration } from "@/utils/format";
 import { FormField } from "./FormField";
 import { PrintDocument } from "./PrintDocument";
 
@@ -24,7 +25,14 @@ export function ServiceForm() {
   }, [sheet, hydrated]);
 
   const update = (field: ServiceSheetField) => (value: string) =>
-    setSheet((prev) => ({ ...prev, [field]: value }));
+    setSheet((prev) => {
+      const next = { ...prev, [field]: value };
+      // Recalcula o total automaticamente ao alterar início ou fim.
+      if (field === "von" || field === "bis") {
+        next.gesamt = computeDuration(next.von, next.bis);
+      }
+      return next;
+    });
 
   const handleClear = () => {
     if (window.confirm("Alle Formularfelder löschen?")) {
@@ -141,7 +149,8 @@ export function ServiceForm() {
             label="Gesamt"
             value={sheet.gesamt}
             onChange={update("gesamt")}
-            placeholder="z. B. 3h30"
+            placeholder="automatisch"
+            readOnly
           />
           <FormField
             id="data"
