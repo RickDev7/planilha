@@ -20,6 +20,10 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: "/icons/apple-icon.png", sizes: "180x180" }],
   },
+  // Impede a tradução automática do navegador (evita erro de hidratação).
+  other: {
+    google: "notranslate",
+  },
 };
 
 export const viewport: Viewport = {
@@ -36,8 +40,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de">
-      <body className="antialiased">
+    <html lang="de" translate="no" suppressHydrationWarning>
+      <body className="antialiased notranslate" suppressHydrationWarning>
         {children}
         <ServiceWorkerRegister />
       </body>

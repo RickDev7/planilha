@@ -7,44 +7,78 @@ interface SignaturePadProps {
   value: string;
   /** Recebe o novo data URL ao terminar um traço, ou "" ao limpar. */
   onChange: (dataUrl: string) => void;
+  /** Salva a assinatura atual de forma permanente. */
+  onSave: () => void;
+  /** Remove a assinatura permanente salva. */
+  onClearSaved: () => void;
+  /** Indica se já existe uma assinatura salva permanentemente. */
+  saved: boolean;
 }
 
 /**
  * Área de assinatura por toque/mouse. Desenha em um <canvas> e devolve
- * a imagem como data URL PNG, que é então embutida no PDF.
+ * a imagem como data URL PNG (fundo transparente), embutida no PDF.
+ * A assinatura pode ser salva para reutilização automática em folhas futuras.
  */
-export function SignaturePad({ value, onChange }: SignaturePadProps) {
+export function SignaturePad({
+  value,
+  onChange,
+  onSave,
+  onClearSaved,
+  saved,
+}: SignaturePadProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawingRef = useRef(false);
   const lastRef = useRef<{ x: number; y: number } | null>(null);
+  // Último data URL que este componente emitiu, para distinguir mudanças
+  // internas (traço do usuário) de mudanças externas (assinatura carregada).
+  const selfEmittedRef = useRef<string>("");
   const [hasInk, setHasInk] = useState(Boolean(value));
 
-  // Ajusta a resolução do canvas ao tamanho real e restaura assinatura salva.
+  const configureContext = (ctx: CanvasRenderingContext2D) => {
+    ctx.lineWidth = 2.2;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "#111111";
+  };
+
+  // Ajusta a resolução do canvas ao tamanho real do elemento (uma vez).
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
 
     const ratio = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width * ratio;
     canvas.height = rect.height * ratio;
     ctx.scale(ratio, ratio);
-    ctx.lineWidth = 2.2;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = "#111111";
+    configureContext(ctx);
+  }, []);
+
+  // Desenha a assinatura quando ela muda por fonte externa (carregada/removida).
+  useEffect(() => {
+    if (value === selfEmittedRef.current) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+
+    const rect = canvas.getBoundingClientRect();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (value) {
       const img = new Image();
-      img.onload = () => ctx.drawImage(img, 0, 0, rect.width, rect.height);
+      img.onload = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, rect.width, rect.height);
+      };
       img.src = value;
+      setHasInk(true);
+    } else {
+      setHasInk(false);
     }
-    // Executa apenas na montagem: o restauro contínuo apagaria o traço em curso.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [value]);
 
   const pointFromEvent = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -78,7 +112,11 @@ export function SignaturePad({ value, onChange }: SignaturePadProps) {
     drawingRef.current = false;
     lastRef.current = null;
     const canvas = canvasRef.current;
-    if (canvas && hasInk) onChange(canvas.toDataURL("image/png"));
+    if (canvas && hasInk) {
+      const dataUrl = canvas.toDataURL("image/png");
+      selfEmittedRef.current = dataUrl;
+      onChange(dataUrl);
+    }
   };
 
   const clear = () => {
@@ -88,6 +126,7 @@ export function SignaturePad({ value, onChange }: SignaturePadProps) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
     setHasInk(false);
+    selfEmittedRef.current = "";
     onChange("");
   };
 
@@ -113,9 +152,32 @@ export function SignaturePad({ value, onChange }: SignaturePadProps) {
         onPointerLeave={endDraw}
         className="h-40 w-full touch-none rounded-lg border border-neutral-300 bg-white shadow-sm"
       />
-      <p className="text-xs text-neutral-400">
-        Mit dem Finger unterschreiben.
-      </p>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs text-neutral-400">
+          {saved
+            ? "Gespeicherte Unterschrift wird automatisch verwendet."
+            : "Mit dem Finger unterschreiben."}
+        </p>
+        <div className="flex shrink-0 gap-3">
+          {saved && (
+            <button
+              type="button"
+              onClick={onClearSaved}
+              className="text-xs font-medium text-neutral-500 hover:underline"
+            >
+              Gespeicherte löschen
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={onSave}
+            disabled={!hasInk}
+            className="text-xs font-semibold text-kile-copper hover:underline disabled:cursor-not-allowed disabled:text-neutral-300 disabled:no-underline"
+          >
+            Speichern
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

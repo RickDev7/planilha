@@ -30,3 +30,6 @@ export const EMPTY_SHEET: ServiceSheet = {
 
 /** Chave usada para persistir o rascunho no navegador (offline). */
 export const STORAGE_KEY = "kile-service-sheet";
+
+/** Chave para a assinatura permanente (reutilizada em todas as folhas). */
+export const SIGNATURE_STORAGE_KEY = "kile-signature";

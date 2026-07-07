@@ -3,7 +3,14 @@
 import { useEffect, useState } from "react";
 import { EMPTY_SHEET } from "@/lib/constants";
 import type { ServiceSheet, ServiceSheetField } from "@/lib/types";
-import { clearSheet, loadSheet, saveSheet } from "@/utils/storage";
+import {
+  clearSheet,
+  clearSignature,
+  loadSheet,
+  loadSignature,
+  saveSheet,
+  saveSignature,
+} from "@/utils/storage";
 import { buildPdfName, generatePdf } from "@/utils/print";
 import { computeDuration } from "@/utils/format";
 import { FormField } from "./FormField";
@@ -13,10 +20,14 @@ import { PrintDocument } from "./PrintDocument";
 export function ServiceForm() {
   const [sheet, setSheet] = useState<ServiceSheet>(EMPTY_SHEET);
   const [hydrated, setHydrated] = useState(false);
+  const [signatureSaved, setSignatureSaved] = useState(false);
 
   // Carrega o rascunho salvo apenas no cliente (evita mismatch de hidratação).
+  // A assinatura vem do seu armazenamento permanente (reutilizada em toda folha).
   useEffect(() => {
-    setSheet(loadSheet());
+    const savedSignature = loadSignature();
+    setSheet({ ...loadSheet(), assinatura: savedSignature });
+    setSignatureSaved(Boolean(savedSignature));
     setHydrated(true);
   }, []);
 
@@ -37,9 +48,24 @@ export function ServiceForm() {
 
   const handleClear = () => {
     if (window.confirm("Alle Formularfelder löschen?")) {
-      setSheet(EMPTY_SHEET);
+      // Mantém a assinatura salva ao limpar o restante do formulário.
+      setSheet({ ...EMPTY_SHEET, assinatura: loadSignature() });
       clearSheet();
     }
+  };
+
+  // Salva/substitui a assinatura desenhada para reutilização futura.
+  const handleSaveSignature = () => {
+    if (!sheet.assinatura) return;
+    saveSignature(sheet.assinatura);
+    setSignatureSaved(true);
+  };
+
+  // Remove a assinatura salva e limpa o campo atual.
+  const handleClearSavedSignature = () => {
+    clearSignature();
+    setSignatureSaved(false);
+    setSheet((prev) => ({ ...prev, assinatura: "" }));
   };
 
   const handleGeneratePdf = () =>
@@ -167,6 +193,9 @@ export function ServiceForm() {
             <SignaturePad
               value={sheet.assinatura}
               onChange={update("assinatura")}
+              onSave={handleSaveSignature}
+              onClearSaved={handleClearSavedSignature}
+              saved={signatureSaved}
             />
           </div>
         </Section>

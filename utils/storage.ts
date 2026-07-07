@@ -1,4 +1,4 @@
-import { EMPTY_SHEET, STORAGE_KEY } from "@/lib/constants";
+import { EMPTY_SHEET, SIGNATURE_STORAGE_KEY, STORAGE_KEY } from "@/lib/constants";
 import type { ServiceSheet } from "@/lib/types";
 
 /** Lê o rascunho salvo no localStorage; devolve a folha vazia se não houver. */
@@ -13,13 +13,48 @@ export function loadSheet(): ServiceSheet {
   }
 }
 
-/** Persiste o rascunho atual para não perder dados ao recarregar/offline. */
+/**
+ * Persiste o rascunho atual. A assinatura NÃO entra no rascunho: ela tem
+ * armazenamento próprio (permanente) para ser reutilizada em todas as folhas.
+ */
 export function saveSheet(sheet: ServiceSheet): void {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(sheet));
+    const { assinatura: _assinatura, ...draft } = sheet;
+    void _assinatura;
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
   } catch {
     // Sem espaço ou modo privado: ignora silenciosamente.
+  }
+}
+
+/** Lê a assinatura permanente (data URL PNG) ou "" se não houver. */
+export function loadSignature(): string {
+  if (typeof window === "undefined") return "";
+  try {
+    return window.localStorage.getItem(SIGNATURE_STORAGE_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+/** Grava/substitui a assinatura permanente. */
+export function saveSignature(dataUrl: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(SIGNATURE_STORAGE_KEY, dataUrl);
+  } catch {
+    // ignora
+  }
+}
+
+/** Remove a assinatura permanente do armazenamento. */
+export function clearSignature(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(SIGNATURE_STORAGE_KEY);
+  } catch {
+    // ignora
   }
 }
 
