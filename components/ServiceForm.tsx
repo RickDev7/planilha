@@ -139,7 +139,7 @@ export function ServiceForm() {
               label="Aufgabe"
               value={sheet.tarefa}
               onChange={update("tarefa")}
-              rows={3}
+              rows={5}
             />
           </div>
           <div className="sm:col-span-2">
@@ -149,16 +149,6 @@ export function ServiceForm() {
               label="Bemerkung"
               value={sheet.observacao}
               onChange={update("observacao")}
-              rows={3}
-            />
-          </div>
-          <div className="sm:col-span-2">
-            <FormField
-              as="textarea"
-              id="informacoes"
-              label="Informationen"
-              value={sheet.informacoes}
-              onChange={update("informacoes")}
               rows={5}
             />
           </div>

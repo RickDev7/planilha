@@ -61,7 +61,6 @@ export function PrintDocument({ sheet }: PrintDocumentProps) {
             <div className="p-textstack">
               <Field field={{ label: "Aufgabe", value: sheet.tarefa }} tall />
               <Field field={{ label: "Bemerkung", value: sheet.observacao }} tall />
-              <Field field={{ label: "Informationen", value: sheet.informacoes }} grow />
             </div>
           </div>
 

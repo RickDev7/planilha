@@ -214,34 +214,41 @@
     overflow: hidden;
   }
 
-  /* Ajuste fino para igualar o espaçamento vertical entre seções */
-  .p-section-hours {
-    margin-top: 4mm;
-  }
-
-  /* Um pouco mais de respiro entre os cards para não ficar colado */
   .p-content {
-    gap: 7mm;
+    gap: 5mm;
+    margin-top: 5mm;
   }
 
-  /* Evita que o card "Informationen" cresça demais na impressão */
+  /* Seções com altura fixa — não crescem com o conteúdo */
   .p-section-grow {
-    flex: 0 1 auto;
-  }
-
-  /* E evita que o campo "Informationen" estique para preencher tudo */
-  .p-field .p-field-value.p-field-grow {
-    flex: 0 1 auto;
-    min-height: 15mm;
-  }
-
-  /* Remove esticamento interno do stack (evita encostar na seção de horas) */
-  .p-textstack {
     flex: 0 0 auto;
   }
 
-  /* Se necessário, reduz levemente a altura dos campos de texto altos */
+  .p-textstack {
+    flex: 0 0 auto;
+    gap: 3mm;
+  }
+
+  .p-field-grow-wrap {
+    flex: 0 0 auto;
+  }
+
+  /* Campos curtos: altura limitada mesmo com texto */
+  .p-field .p-field-value {
+    min-height: 7mm;
+    max-height: 10mm;
+    overflow: hidden;
+  }
+
+  /* Campos de texto (Aufgabe / Bemerkung) — mais espaço sem Informationen */
   .p-field .p-field-value.p-field-tall {
     min-height: 14mm;
+    max-height: 28mm;
+    overflow: hidden;
+  }
+
+  /* Espaço consistente antes da seção de horários */
+  .p-section-hours {
+    margin-top: 0;
   }
 }
