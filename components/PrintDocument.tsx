@@ -65,7 +65,7 @@ export function PrintDocument({ sheet }: PrintDocumentProps) {
             </div>
           </div>
 
-          <div className="p-section">
+          <div className="p-section p-section-hours">
             <div className="p-section-title">Uhrzeiten</div>
             <div className="p-grid p-grid-4">
               {timeFields.map((f) => (

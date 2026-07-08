@@ -139,7 +139,7 @@
 /* Caixa que cresce (Informationen) */
 .p-field .p-field-value.p-field-grow {
   flex: 1;
-  min-height: 22mm;
+  min-height: 18mm;
 }
 
 /* Assinatura no rodapé da mesma folha */
@@ -212,5 +212,36 @@
     height: 297mm;
     margin: 0;
     overflow: hidden;
+  }
+
+  /* Ajuste fino para igualar o espaçamento vertical entre seções */
+  .p-section-hours {
+    margin-top: 4mm;
+  }
+
+  /* Um pouco mais de respiro entre os cards para não ficar colado */
+  .p-content {
+    gap: 7mm;
+  }
+
+  /* Evita que o card "Informationen" cresça demais na impressão */
+  .p-section-grow {
+    flex: 0 1 auto;
+  }
+
+  /* E evita que o campo "Informationen" estique para preencher tudo */
+  .p-field .p-field-value.p-field-grow {
+    flex: 0 1 auto;
+    min-height: 15mm;
+  }
+
+  /* Remove esticamento interno do stack (evita encostar na seção de horas) */
+  .p-textstack {
+    flex: 0 0 auto;
+  }
+
+  /* Se necessário, reduz levemente a altura dos campos de texto altos */
+  .p-field .p-field-value.p-field-tall {
+    min-height: 14mm;
   }
 }
