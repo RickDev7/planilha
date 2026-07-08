@@ -16,8 +16,10 @@ export interface ServiceSheet {
   bis: string;
   gesamt: string;
   data: string;
-  /** Quantidade de trabalhadores que realizaram o trabalho. */
-  mitarbeiterAnzahl: string;
+  /** Empresa externa (Fremdfirma). */
+  fremdfirma: string;
+  /** Quantidade de pessoal externo empregado. */
+  fremdpersonalAnzahl: string;
   /** Assinatura do cliente como imagem PNG (data URL). Vazio se não assinada. */
   assinatura: string;
 }

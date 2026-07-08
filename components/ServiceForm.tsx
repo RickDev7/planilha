@@ -122,12 +122,19 @@ export function ServiceForm() {
             placeholder="Ort der Durchführung"
           />
           <FormField
-            id="mitarbeiterAnzahl"
-            label="Anzahl Mitarbeiter"
+            id="fremdfirma"
+            label="Fremdfirma"
+            value={sheet.fremdfirma}
+            onChange={update("fremdfirma")}
+            placeholder="Name der Fremdfirma"
+          />
+          <FormField
+            id="fremdpersonalAnzahl"
+            label="Eingesetztes Fremdpersonal"
             type="number"
-            value={sheet.mitarbeiterAnzahl}
-            onChange={update("mitarbeiterAnzahl")}
-            placeholder="z. B. 2"
+            value={sheet.fremdpersonalAnzahl}
+            onChange={update("fremdpersonalAnzahl")}
+            placeholder="Personen"
           />
         </Section>
 
