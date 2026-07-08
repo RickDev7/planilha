@@ -10,7 +10,7 @@ type BaseProps = {
 
 type InputProps = BaseProps & {
   as?: "input";
-  type?: "text" | "date" | "time";
+  type?: "text" | "date" | "time" | "number";
   /** Campo calculado/somente leitura (ex: total de horas). */
   readOnly?: boolean;
 };

@@ -16,6 +16,8 @@ export interface ServiceSheet {
   bis: string;
   gesamt: string;
   data: string;
+  /** Quantidade de trabalhadores que realizaram o trabalho. */
+  mitarbeiterAnzahl: string;
   /** Assinatura do cliente como imagem PNG (data URL). Vazio se não assinada. */
   assinatura: string;
 }

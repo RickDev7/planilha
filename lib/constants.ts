@@ -25,6 +25,7 @@ export const EMPTY_SHEET: ServiceSheet = {
   bis: "",
   gesamt: "",
   data: "",
+  mitarbeiterAnzahl: "",
   assinatura: "",
 };
 

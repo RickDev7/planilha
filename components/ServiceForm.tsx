@@ -121,6 +121,14 @@ export function ServiceForm() {
             onChange={update("local")}
             placeholder="Ort der Durchführung"
           />
+          <FormField
+            id="mitarbeiterAnzahl"
+            label="Anzahl Mitarbeiter"
+            type="number"
+            value={sheet.mitarbeiterAnzahl}
+            onChange={update("mitarbeiterAnzahl")}
+            placeholder="z. B. 2"
+          />
         </Section>
 
         <Section title="Aufgabe und Bemerkungen">

@@ -24,6 +24,7 @@ export function PrintDocument({ sheet }: PrintDocumentProps) {
     { label: "Adresse", value: sheet.morada },
     { label: "PLZ / Ort", value: sheet.codigoPostalCidade },
     { label: "Einsatzort", value: sheet.local },
+    { label: "Anzahl Mitarbeiter", value: sheet.mitarbeiterAnzahl },
   ];
 
   const timeFields: Field[] = [
