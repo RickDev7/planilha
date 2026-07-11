@@ -106,18 +106,10 @@ export function PrintDocument({ sheet }: PrintDocumentProps) {
   );
 }
 
-function Field({
-  field,
-  tall,
-  grow,
-}: {
-  field: Field;
-  tall?: boolean;
-  grow?: boolean;
-}) {
-  const cls = grow ? " p-field-grow" : tall ? " p-field-tall" : "";
+function Field({ field, tall }: { field: Field; tall?: boolean }) {
+  const cls = tall ? " p-field-tall" : "";
   return (
-    <div className={`p-field${grow ? " p-field-grow-wrap" : ""}`}>
+    <div className="p-field">
       <div className="p-field-label">{field.label}</div>
       <div className={`p-field-value${cls}`}>{field.value}</div>
     </div>

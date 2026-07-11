@@ -11,7 +11,7 @@
 .sheet {
   box-sizing: border-box;
   width: 210mm;
-  height: 297mm;
+  min-height: 297mm;
   padding: 14mm 15mm 12mm;
   margin: 0 auto;
   display: flex;
@@ -23,7 +23,6 @@
   line-height: 1.4;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
-  overflow: hidden;
 }
 
 /* Cabeçalho: logo + contato */
@@ -66,10 +65,8 @@
   padding: 4.5mm 5mm;
 }
 
-/* Seção de textos cresce para ocupar o espaço restante */
 .p-section-grow {
-  flex: 1;
-  min-height: 0;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
 }
@@ -96,18 +93,9 @@
 
 /* Pilha vertical dos campos de texto */
 .p-textstack {
-  flex: 1;
-  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 4mm;
-}
-
-.p-field-grow-wrap {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
 }
 
 /* Campo: rótulo + caixa de valor */
@@ -134,12 +122,6 @@
 
 .p-field .p-field-value.p-field-tall {
   min-height: 16mm;
-}
-
-/* Caixa que cresce (Informationen) */
-.p-field .p-field-value.p-field-grow {
-  flex: 1;
-  min-height: 18mm;
 }
 
 /* Assinatura no rodapé da mesma folha */
@@ -209,9 +191,8 @@
 
   .sheet {
     width: 210mm;
-    height: 297mm;
+    min-height: 297mm;
     margin: 0;
-    overflow: hidden;
   }
 
   .p-content {
@@ -219,36 +200,16 @@
     margin-top: 5mm;
   }
 
-  /* Seções com altura fixa — não crescem com o conteúdo */
-  .p-section-grow {
-    flex: 0 0 auto;
-  }
-
   .p-textstack {
-    flex: 0 0 auto;
     gap: 3mm;
   }
 
-  .p-field-grow-wrap {
-    flex: 0 0 auto;
-  }
-
-  /* Campos curtos: altura limitada mesmo com texto */
+  /* Campos crescem com o texto — sem max-height nem corte */
   .p-field .p-field-value {
     min-height: 7mm;
-    max-height: 10mm;
-    overflow: hidden;
   }
 
-  /* Campos de texto (Aufgabe / Bemerkung) — mais espaço sem Informationen */
   .p-field .p-field-value.p-field-tall {
     min-height: 14mm;
-    max-height: 28mm;
-    overflow: hidden;
-  }
-
-  /* Espaço consistente antes da seção de horários */
-  .p-section-hours {
-    margin-top: 0;
   }
 }

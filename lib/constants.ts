@@ -20,7 +20,6 @@ export const EMPTY_SHEET: ServiceSheet = {
   local: "",
   tarefa: "",
   observacao: "",
-  informacoes: "",
   von: "",
   bis: "",
   gesamt: "",

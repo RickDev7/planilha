@@ -11,7 +11,6 @@ export interface ServiceSheet {
   local: string;
   tarefa: string;
   observacao: string;
-  informacoes: string;
   von: string;
   bis: string;
   gesamt: string;
@@ -20,7 +19,7 @@ export interface ServiceSheet {
   fremdfirma: string;
   /** Quantidade de pessoal externo empregado. */
   fremdpersonalAnzahl: string;
-  /** Assinatura do cliente como imagem PNG (data URL). Vazio se não assinada. */
+  /** Assinatura do funcionário como imagem PNG (data URL). Vazio se não assinada. */
   assinatura: string;
 }
 
