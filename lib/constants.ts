@@ -12,7 +12,7 @@ export const COMPANY = {
 
 /** Estado inicial (todos os campos vazios). */
 export const EMPTY_SHEET: ServiceSheet = {
-  planeadaRealizacao: "",
+  responsavel: "",
   dataRealizacao: "",
   cliente: "",
   morada: "",

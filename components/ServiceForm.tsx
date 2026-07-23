@@ -80,11 +80,11 @@ export function ServiceForm() {
       >
         <Section title="Servicedaten">
           <FormField
-            id="planeadaRealizacao"
-            label="Geplante Durchführung"
-            type="date"
-            value={sheet.planeadaRealizacao}
-            onChange={update("planeadaRealizacao")}
+            id="responsavel"
+            label="Objektleiter / Hausmeister"
+            value={sheet.responsavel}
+            onChange={update("responsavel")}
+            placeholder="Name"
           />
           <FormField
             id="dataRealizacao"

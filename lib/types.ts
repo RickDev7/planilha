@@ -3,7 +3,8 @@
  * Cada chave corresponde a um campo editável do formulário.
  */
 export interface ServiceSheet {
-  planeadaRealizacao: string;
+  /** Nome do Objektleiter / Hausmeister responsável pela execução. */
+  responsavel: string;
   dataRealizacao: string;
   cliente: string;
   morada: string;

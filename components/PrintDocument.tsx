@@ -18,7 +18,7 @@ interface Field {
  */
 export function PrintDocument({ sheet }: PrintDocumentProps) {
   const serviceFields: Field[] = [
-    { label: "Geplante Durchführung", value: formatDate(sheet.planeadaRealizacao) },
+    { label: "Objektleiter / Hausmeister", value: sheet.responsavel },
     { label: "Durchführungsdatum", value: formatDate(sheet.dataRealizacao) },
     { label: "Kunde", value: sheet.cliente },
     { label: "Adresse", value: sheet.morada },
