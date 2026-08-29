@@ -34,3 +34,9 @@ export const STORAGE_KEY = "kile-service-sheet";
 
 /** Chave para a assinatura permanente (reutilizada em todas as folhas). */
 export const SIGNATURE_STORAGE_KEY = "kile-signature";
+
+/** Clientes e endereços reutilizáveis. */
+export const CUSTOMERS_STORAGE_KEY = "kile-customers";
+
+/** Empresas externas (Fremdfirmen) reutilizáveis. */
+export const FREMDFIRMEN_STORAGE_KEY = "kile-fremdfirmen";

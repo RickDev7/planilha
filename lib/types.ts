@@ -25,3 +25,27 @@ export interface ServiceSheet {
 }
 
 export type ServiceSheetField = keyof ServiceSheet;
+
+/** Endereço vinculado a um cliente (um Kunde pode ter vários). */
+export interface CustomerAddress {
+  id: string;
+  street: string;
+  plz: string;
+  ort: string;
+  einsatzort: string;
+  defaultAufgabe?: string;
+  defaultBemerkung?: string;
+}
+
+/** Cliente cadastrado com um ou mais endereços. */
+export interface Customer {
+  id: string;
+  name: string;
+  addresses: CustomerAddress[];
+}
+
+/** Empresa externa cadastrada (somente nome). */
+export interface FremdfirmaRecord {
+  id: string;
+  name: string;
+}

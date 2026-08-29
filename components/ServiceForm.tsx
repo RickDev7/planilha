@@ -16,14 +16,23 @@ import { computeDuration } from "@/utils/format";
 import { FormField } from "./FormField";
 import { SignaturePad } from "./SignaturePad";
 import { PrintDocument } from "./PrintDocument";
+import { CustomerPicker } from "./CustomerPicker";
+import { FremdfirmaPicker } from "./FremdfirmaPicker";
+import { QuickAddCustomerModal } from "./QuickAddCustomerModal";
+import { QuickAddFremdfirmaModal } from "./QuickAddFremdfirmaModal";
+import { sheetFieldsFromCustomerAddress } from "@/utils/customers-format";
 
 export function ServiceForm() {
   const [sheet, setSheet] = useState<ServiceSheet>(EMPTY_SHEET);
   const [hydrated, setHydrated] = useState(false);
   const [signatureSaved, setSignatureSaved] = useState(false);
+  const [selectedCustomerKey, setSelectedCustomerKey] = useState("");
+  const [selectedFremdfirmaId, setSelectedFremdfirmaId] = useState("");
+  const [customerRefresh, setCustomerRefresh] = useState(0);
+  const [fremdfirmaRefresh, setFremdfirmaRefresh] = useState(0);
+  const [showCustomerModal, setShowCustomerModal] = useState(false);
+  const [showFremdfirmaModal, setShowFremdfirmaModal] = useState(false);
 
-  // Carrega o rascunho salvo apenas no cliente (evita mismatch de hidratação).
-  // A assinatura vem do seu armazenamento permanente (reutilizada em toda folha).
   useEffect(() => {
     const savedSignature = loadSignature();
     setSheet({ ...loadSheet(), assinatura: savedSignature });
@@ -31,7 +40,6 @@ export function ServiceForm() {
     setHydrated(true);
   }, []);
 
-  // Persiste automaticamente a cada alteração.
   useEffect(() => {
     if (hydrated) saveSheet(sheet);
   }, [sheet, hydrated]);
@@ -39,29 +47,65 @@ export function ServiceForm() {
   const update = (field: ServiceSheetField) => (value: string) =>
     setSheet((prev) => {
       const next = { ...prev, [field]: value };
-      // Recalcula o total automaticamente ao alterar início ou fim.
       if (field === "von" || field === "bis") {
         next.gesamt = computeDuration(next.von, next.bis);
       }
       return next;
     });
 
+  const updateWithCustomerClear =
+    (
+      field:
+        | "cliente"
+        | "morada"
+        | "codigoPostalCidade"
+        | "local"
+        | "tarefa"
+        | "observacao",
+    ) =>
+    (value: string) => {
+      setSelectedCustomerKey("");
+      update(field)(value);
+    };
+
+  const updateFremdfirmaField = (value: string) => {
+    setSelectedFremdfirmaId("");
+    update("fremdfirma")(value);
+  };
+
+  const applyCustomerFields = (
+    fields: ReturnType<typeof sheetFieldsFromCustomerAddress>,
+    key: string,
+  ) => {
+    setSelectedCustomerKey(key);
+    setSheet((prev) => ({
+      ...prev,
+      ...fields,
+      gesamt: prev.gesamt,
+      assinatura: prev.assinatura,
+    }));
+  };
+
+  const applyFremdfirma = (name: string, id: string) => {
+    setSelectedFremdfirmaId(id);
+    update("fremdfirma")(name);
+  };
+
   const handleClear = () => {
     if (window.confirm("Alle Formularfelder löschen?")) {
-      // Mantém a assinatura salva ao limpar o restante do formulário.
+      setSelectedCustomerKey("");
+      setSelectedFremdfirmaId("");
       setSheet({ ...EMPTY_SHEET, assinatura: loadSignature() });
       clearSheet();
     }
   };
 
-  // Salva/substitui a assinatura desenhada para reutilização futura.
   const handleSaveSignature = () => {
     if (!sheet.assinatura) return;
     saveSignature(sheet.assinatura);
     setSignatureSaved(true);
   };
 
-  // Remove a assinatura salva e limpa o campo atual.
   const handleClearSavedSignature = () => {
     clearSignature();
     setSignatureSaved(false);
@@ -73,12 +117,18 @@ export function ServiceForm() {
 
   return (
     <>
-      {/* Formulário visível na tela */}
       <form
         className="screen-only mt-5 space-y-6"
         onSubmit={(e) => e.preventDefault()}
       >
         <Section title="Servicedaten">
+          <CustomerPicker
+            selectedKey={selectedCustomerKey}
+            onSelectKey={setSelectedCustomerKey}
+            onApply={applyCustomerFields}
+            onRequestNew={() => setShowCustomerModal(true)}
+            refreshToken={customerRefresh}
+          />
           <FormField
             id="responsavel"
             label="Objektleiter / Hausmeister"
@@ -97,35 +147,42 @@ export function ServiceForm() {
             id="cliente"
             label="Kunde"
             value={sheet.cliente}
-            onChange={update("cliente")}
+            onChange={updateWithCustomerClear("cliente")}
             placeholder="Name des Kunden"
           />
           <FormField
             id="morada"
             label="Adresse"
             value={sheet.morada}
-            onChange={update("morada")}
+            onChange={updateWithCustomerClear("morada")}
             placeholder="Straße und Hausnummer"
           />
           <FormField
             id="codigoPostalCidade"
             label="PLZ / Ort"
             value={sheet.codigoPostalCidade}
-            onChange={update("codigoPostalCidade")}
+            onChange={updateWithCustomerClear("codigoPostalCidade")}
             placeholder="00000 Ort"
           />
           <FormField
             id="local"
             label="Einsatzort"
             value={sheet.local}
-            onChange={update("local")}
+            onChange={updateWithCustomerClear("local")}
             placeholder="Ort der Durchführung"
+          />
+          <FremdfirmaPicker
+            selectedId={selectedFremdfirmaId}
+            onSelectId={setSelectedFremdfirmaId}
+            onApply={applyFremdfirma}
+            onRequestNew={() => setShowFremdfirmaModal(true)}
+            refreshToken={fremdfirmaRefresh}
           />
           <FormField
             id="fremdfirma"
             label="Fremdfirma"
             value={sheet.fremdfirma}
-            onChange={update("fremdfirma")}
+            onChange={updateFremdfirmaField}
             placeholder="Name der Fremdfirma"
           />
           <FormField
@@ -145,7 +202,7 @@ export function ServiceForm() {
               id="tarefa"
               label="Aufgabe"
               value={sheet.tarefa}
-              onChange={update("tarefa")}
+              onChange={updateWithCustomerClear("tarefa")}
               rows={5}
             />
           </div>
@@ -155,7 +212,7 @@ export function ServiceForm() {
               id="observacao"
               label="Bemerkung"
               value={sheet.observacao}
-              onChange={update("observacao")}
+              onChange={updateWithCustomerClear("observacao")}
               rows={5}
             />
           </div>
@@ -205,7 +262,6 @@ export function ServiceForm() {
           </div>
         </Section>
 
-        {/* Botões de ação */}
         <div className="sticky bottom-0 -mx-4 flex gap-3 border-t border-neutral-200 bg-[var(--background)]/95 px-4 py-4 backdrop-blur sm:mx-0 sm:rounded-xl sm:border sm:px-5">
           <button
             type="button"
@@ -224,7 +280,23 @@ export function ServiceForm() {
         </div>
       </form>
 
-      {/* Documento imprimível (oculto na tela) */}
+      <QuickAddCustomerModal
+        open={showCustomerModal}
+        onClose={() => setShowCustomerModal(false)}
+        onSaved={(key, fields) => {
+          setCustomerRefresh((n) => n + 1);
+          applyCustomerFields(fields, key);
+        }}
+      />
+      <QuickAddFremdfirmaModal
+        open={showFremdfirmaModal}
+        onClose={() => setShowFremdfirmaModal(false)}
+        onSaved={(id, name) => {
+          setFremdfirmaRefresh((n) => n + 1);
+          applyFremdfirma(name, id);
+        }}
+      />
+
       <PrintDocument sheet={sheet} />
     </>
   );

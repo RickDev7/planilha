@@ -2,9 +2,10 @@
 // Estratégia: precache do app shell + runtime cache (stale-while-revalidate)
 // para permitir uso totalmente offline após o primeiro carregamento.
 
-const CACHE = "kile-sheet-v5";
+const CACHE = "kile-sheet-v6";
 const APP_SHELL = [
   "/",
+  "/verwaltung",
   "/logo.png",
   "/manifest.webmanifest",
   "/icons/icon-192.png",
